@@ -11,10 +11,13 @@ from morph_types import exclude_dictionary, is_morph_type
 
 class Word(TypedDict):
     _id: ObjectId
-    variations: list[str]
-    senses: list[str]
-    partOfSpeech: str
     dictId: str
+    variations: list[str]
+    quertyStrs: list[str]
+    sensesKo: list[str]
+    sensesEn: list[str]
+    partOfSpeechKo: str
+    partOfSpeechEn: str
 
 
 type QueryResult = dict[str, list[Word]]

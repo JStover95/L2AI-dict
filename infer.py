@@ -57,6 +57,7 @@ def get_inference(query: str) -> InferenceResult:
             lambda l, r: (
                 l + [
                     "(%s) %s" % (r["partOfSpeechKo"], x) for x in r["sensesKo"]
+                    if "(욕하는 말로)" not in x
                 ]
             ),
             group,
