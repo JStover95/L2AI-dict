@@ -1,5 +1,5 @@
 echo "Initializing Docker container..."
-docker run --name l2ai-mongo -ditp 27017:27017 mongo
+docker run --name l2ai-dict-mongo -ditp 27017:27017 mongo
 
 if [ $? -ne 0 ]
 then
@@ -7,6 +7,7 @@ then
     exit 1
 fi
 
+echo "Initializing database..."
 result=$(python -c "from dictionary import create_db;create_db()" 2>&1)
 
 if [[ "$result" != "True" ]]

@@ -1,35 +1,6 @@
 from mecab import Morpheme
 
-"""
-Sorted by occrence in content.json:
-common noun..................4162
-nominal postposition.........1350
-verb.........................1070
-ending.......................1015
-symbol.......................881
-verbial postposition.........717
-sentence-final punctuation...620
-suffix.......................589
-auxiliary....................570
-adverb.......................431
-number.......................303
-dependent noun...............297
-sentence-final ending........287
-adjective....................231
-noun suffix..................220
-auxiliary verb...............211
-determiner...................199
-proper noun..................198
-prefix.......................192
-conjunction..................181
-copula.......................136
-pronoun......................113
-counting noun................83
-numeral......................81
-interjection.................67
-root.........................47
-"""
-
+# a mapping of all morph types to functions that determine whether a part-of-speech tag is that morph type
 morph_types = {
     "common noun": lambda pos: pos.startswith("NNG"),
     "nominal postposition": lambda pos: pos[0:3] in ["JKS", "JKC", "JKG", "JKO"],
@@ -61,14 +32,7 @@ morph_types = {
     "unknown": lambda pos: pos[0:2] in ["UN", "NA"]
 }
 
-exclude_general = [
-    "symbol",
-    "sentence-final punctuation",
-    "number",
-    "copula",
-    "unknown"
-]
-
+# morphs to exclude when searching the dictionary
 exclude_dictionary = [
     "nominal postposition",
     "ending",
@@ -84,6 +48,7 @@ exclude_dictionary = [
     "unknown"
 ]
 
+# parts of speech to exclude from results returned from the dictionary
 exclude_dictionary_results = [
     "Particle",
     "Determiner",
@@ -93,29 +58,19 @@ exclude_dictionary_results = [
     "Auxiliary adjective"
 ]
 
-exclude_idioms = [
-    "nominal postposition",
-    "symbol",
-    "sentence-final punctuation",
-    "number",
-    "unknown"
-]
-
-dependent_types = [
-    "nominal postposition",
-    "ending",
-    "verbial postposition",
-    "verb suffix",
-    "adjective suffix",
-    "auxiliary",
-    "dependent noun",
-    "sentence-final ending",
-    "auxiliary verb",
-    "conjunction"
-]
-
-
 def is_morph_type(morph: Morpheme | str, types: list[str] | str) -> bool:
+    """
+    Determine whether a Morpheme or part-of-speech tag is one of a given set of
+    morph types.
+
+    Args:
+        morph (Morpheme | str): Either the Morpheme or the part-of-speech tag
+            from a Morpheme.
+        types (list[str] | str): Either one morph type or a list of morph types.
+
+    Returns:
+        bool
+    """
     if type(morph) is Morpheme:
         pos = morph.pos
     else:
@@ -125,17 +80,3 @@ def is_morph_type(morph: Morpheme | str, types: list[str] | str) -> bool:
         return any(map(lambda x: morph_types[x](pos), types))
     else:
         return morph_types[types](pos)
-
-
-def get_morph_type(morph: Morpheme) -> str:
-    if type(morph) is Morpheme:
-        pos = morph.pos
-    else:
-        pos = morph
-
-    for key, function in morph_types.items():
-        if function(pos):
-            return key
-
-    print(morph)
-    raise ValueError("Morph pos not found: %s" % str(pos))
